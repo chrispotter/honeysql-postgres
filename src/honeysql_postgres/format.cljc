@@ -96,7 +96,11 @@
   (str (sqlf/to-sql field) " NOT ILIKE "
        (sqlf/to-sql value)))
 
-;; format-clause multimethods used to format various sql clauses as defined
+(defmethod fn-handler "~" [_ field value]
+  (str (sqlf/to-sql field) " ~ "
+       (sqlf/to-sql value)))
+
+ ;; format-clause multimethods used to format various sql clauses as defined
 
 (defmethod format-clause :on-conflict-constraint [[_ k] _]
   (str "ON CONFLICT ON CONSTRAINT " (-> k

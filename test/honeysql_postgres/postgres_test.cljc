@@ -71,7 +71,7 @@
     (is (= ["DELETE FROM distributors WHERE did > 10 RETURNING *"]
            (sql/format {:delete-from :distributors
                         :where [:> :did :10]
-                        :returning [:*] })))
+                        :returning [:*]})))
     (is (= ["UPDATE distributors SET dname = ? WHERE did = 2 RETURNING did dname" "Foo Bar Designs"]
            (-> (update :distributors)
                (sset {:dname "Foo Bar Designs"})
@@ -218,6 +218,14 @@
            (-> (select :*)
               (from :products)
               (where [:not-ilike :name "%name%"])
+              sql/format)))))
+
+(deftest select-where-~
+  (testing "select from table with ~ operator"
+    (is (= ["SELECT * FROM products WHERE name ~ ?" "%name%"]
+           (-> (select :*)
+              (from :products)
+              (where [:~ :name "%name%"])
               sql/format)))))
 
 (deftest values-except-select
